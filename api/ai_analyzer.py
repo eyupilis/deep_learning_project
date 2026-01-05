@@ -13,12 +13,15 @@ import google.generativeai as genai
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configure Gemini
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyC5pSWww3xejVx0nB99xwImm5RoJEP5IrQ")
-genai.configure(api_key=GEMINI_API_KEY)
+# Configure Gemini - API key MUST be set via environment variable
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    logger.warning("GEMINI_API_KEY not set. AI analysis will not work.")
+else:
+    genai.configure(api_key=GEMINI_API_KEY)
 
 # Model configuration
-model = genai.GenerativeModel('gemini-3-flash-preview')
+model = genai.GenerativeModel('gemini-3-flash-preview') if GEMINI_API_KEY else None
 
 # System prompts for each module
 SYSTEM_PROMPTS = {
