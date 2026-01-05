@@ -1,6 +1,11 @@
 # TEFAS Fund Analysis - Dependencies
 # Python 3.9+
 
+# API Server
+fastapi>=0.104.0
+uvicorn>=0.24.0
+google-generativeai>=0.3.0
+
 # Data Collection
 borsapy>=0.1.0
 
