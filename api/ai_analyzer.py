@@ -18,7 +18,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyC5pSWww3xejVx0nB99xwImm5RoJE
 genai.configure(api_key=GEMINI_API_KEY)
 
 # Model configuration
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # System prompts for each module
 SYSTEM_PROMPTS = {
