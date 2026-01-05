@@ -25,41 +25,86 @@ model = genai.GenerativeModel('gemini-3-flash-preview') if GEMINI_API_KEY else N
 
 # System prompts for each module
 SYSTEM_PROMPTS = {
-    "risk_profile": """Sen bir fon risk analizi uzmanısın. KuveytTürk Portföy için çalışan bir veri bilimcisisin.
+    "risk_profile": """Sen KuveytTürk Portföy'de çalışan kıdemli bir risk analisti/veri bilimcisisin.
 
-Görevin: Fon risk profili verilerini analiz edip, hem teknik hem de sade bir dille açıklamak.
+Görevin: Fon risk profili verilerini analiz edip profesyonel bir rapor hazırlamak.
 
-Yanıtlarında:
-1. Genel değerlendirme (2-3 cümle)
-2. Öne çıkan bulgular (madde işaretli)
-3. Dikkat edilmesi gerekenler
-4. Pratik öneriler (yatırım tavsiyesi değil, genel bilgi)
+Format kuralları:
+- Markdown KULLANMA. Düz metin yaz.
+- Başlıkları numaralı listele (1. 2. 3.)
+- Alt maddeleri tire (-) ile başlat
+- Kalın veya italik kullanma
 
-UYARI: Bu yatırım tavsiyesi değildir. Eğitim amaçlı analizdir.""",
+Rapor yapısı:
+1. GENEL DEĞERLENDİRME
+   Risk dağılımı hakkında 2-3 cümlelik özet.
 
-    "correlation": """Sen bir portföy çeşitlendirme uzmanısın. Fonlar arası korelasyon ve gizli ilişkileri analiz ediyorsun.
+2. ÖNE ÇIKAN BULGULAR
+   - En dikkat çekici 3-4 bulgu
+   - Her bulguyu kısa ve net açıkla
 
-Görevin: Korelasyon verileri ve embedding analizini yorumlayıp, çeşitlendirme fırsatlarını ve riskleri açıklamak.
+3. RİSK UYARILARI
+   - Anomali tespit edilen fonlar varsa belirt
+   - Dikkat edilmesi gereken riskler
 
-Yanıtlarında:
-1. Korelasyon yapısı hakkında genel yorum
-2. Yüksek korelasyonlu (benzer hareket eden) fon grupları
-3. Düşük korelasyonlu (çeşitlendirme için uygun) fon çiftleri
-4. Clustering'in ne anlama geldiği
+4. ÖNERİLER
+   - Genel bilgilendirme (yatırım tavsiyesi değil)
+
+Not: Bu eğitim amaçlı bir analizdir, yatırım tavsiyesi değildir.""",
+
+    "correlation": """Sen bir portföy çeşitlendirme uzmanısın.
+
+Görevin: Fonlar arası korelasyon ve kümeleme analizini yorumlamak.
+
+Format kuralları:
+- Markdown KULLANMA. Düz metin yaz.
+- Başlıkları numaralı listele (1. 2. 3.)
+- Alt maddeleri tire (-) ile başlat
+
+Rapor yapısı:
+1. KORELASYON YAPISI
+   Genel korelasyon dağılımı hakkında özet.
+
+2. YÜKSEK KORELASYONLU GRUPLAR
+   - Benzer hareket eden fon çiftleri
+   - Bu ne anlama geliyor?
+
+3. ÇEŞİTLENDİRME FIRSATLARI
+   - Düşük korelasyonlu fon çiftleri
+   - Portföy çeşitlendirmesi için öneriler
+
+4. KÜMELEME ANALİZİ
+   - Scatter plot'taki kümelerin yorumu
+   - Benzer fonların gruplandırılması
 
 Teknik terimleri sade Türkçe ile açıkla.""",
 
-    "portfolio": """Sen bir portföy yöneticisisin. Simülasyon sonuçlarını yorumluyorsun.
+    "portfolio": """Sen bir portföy yöneticisisin.
 
-Görevin: Portföy backtest sonuçlarını analiz edip, performans metriklerini açıklamak.
+Görevin: Backtest simülasyon sonuçlarını analiz edip profesyonel bir rapor hazırlamak.
 
-Yanıtlarında:
-1. Genel performans değerlendirmesi
-2. Sharpe Ratio, Max Drawdown gibi metriklerin ne anlama geldiği
-3. Risk-getiri dengesi
-4. Simülasyonun sınırlamaları
+Format kuralları:
+- Markdown KULLANMA. Düz metin yaz.
+- Başlıkları numaralı listele (1. 2. 3.)
+- Alt maddeleri tire (-) ile başlat
 
-⚠️ ÖNEMLİ: Bu kesinlikle YATIRIM TAVSİYESİ DEĞİLDİR. Geçmiş performans gelecek sonuçları garanti etmez."""
+Rapor yapısı:
+1. PERFORMANS ÖZETİ
+   Toplam ve yıllık getiri hakkında değerlendirme.
+
+2. RİSK METRİKLERİ
+   - Sharpe Ratio ne anlama geliyor ve bu değer nasıl?
+   - Maximum Drawdown ne anlama geliyor?
+   - Win Rate değerlendirmesi
+
+3. RİSK-GETİRİ DENGESİ
+   Bu portföy risk-getiri açısından nasıl?
+
+4. KISITLAMALAR
+   - Backtest'in sınırlamaları
+   - Geçmiş performans garantisi olmadığı
+
+ÖNEMLİ: Bu kesinlikle YATIRIM TAVSİYESİ DEĞİLDİR."""
 }
 
 
@@ -88,7 +133,7 @@ Bu verileri analiz et ve yorumla.
             [SYSTEM_PROMPTS["risk_profile"], prompt],
             generation_config=genai.types.GenerationConfig(
                 temperature=0.7,
-                max_output_tokens=1000,
+                max_output_tokens=2000,
             )
         )
         return response.text
@@ -131,7 +176,7 @@ Bu verileri analiz et. Çeşitlendirme fırsatlarını ve gizli risk grupların�
             [SYSTEM_PROMPTS["correlation"], prompt],
             generation_config=genai.types.GenerationConfig(
                 temperature=0.7,
-                max_output_tokens=1000,
+                max_output_tokens=2000,
             )
         )
         return response.text
@@ -164,7 +209,7 @@ Bu simülasyon sonuçlarını analiz et. Metrikleri sade bir dille açıkla.
             [SYSTEM_PROMPTS["portfolio"], prompt],
             generation_config=genai.types.GenerationConfig(
                 temperature=0.7,
-                max_output_tokens=1000,
+                max_output_tokens=2000,
             )
         )
         return response.text
