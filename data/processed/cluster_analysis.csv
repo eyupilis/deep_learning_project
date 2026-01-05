@@ -1,0 +1,6 @@
+,cluster_id,n_funds,fund_codes,avg_intra_correlation,centroid_x,centroid_y,high_correlation_cluster
+0,0,5,"['KAV', 'KDE', 'KIK', 'KPU', 'KPA']",0.3560849152699552,0.21504717,-0.5103423,False
+1,1,5,"['KTR', 'KCV', 'KGM', 'KPC', 'KSV']",0.2834564973627154,0.09843612,0.028900573,False
+2,2,2,"['KZL', 'KZU']",0.9930256516705859,-0.34803116,0.3582795,True
+3,3,4,"['KDL', 'KTT', 'KNJ', 'KPD']",0.3639592067544266,0.6808113,-0.43024752,False
+4,4,4,"['KUA', 'KTM', 'KUD', 'KTS']",0.9255399836048004,-0.24451272,-0.14671865,True
